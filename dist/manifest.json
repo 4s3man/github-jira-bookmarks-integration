@@ -1,9 +1,9 @@
 {
-    "name": "TS/R/WP Chrome Extension",
+    "name": "CR alert",
     "version": "0.0.1",
     "manifest_version": 2,
-    "description": "Boilerplate for a Chrome extension with TypeScript, React, and Webpack.",
-    "homepage_url": "https://duo.com/labs",
+    "description": "Easy check multiple bookmarked sites, for changes requested after cr",
+    "homepage_url": "https://soundcloud.com/kuba-ku-aga",
     "icons": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -21,9 +21,10 @@
       "persistent": true
     },
     "permissions": [
+      "bookmarks",
       "https://*/*"
     ],
-    "content_security_policy": "default-src 'self';",
+    "content_security_policy": "unsafe-inline",
     "content_scripts": [
       {
         "matches": [
@@ -35,4 +36,4 @@
       }
     ]
   }
-  
+

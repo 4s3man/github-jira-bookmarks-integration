@@ -21,6 +21,12 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.4",
+    "@material-ui/data-grid": "^4.0.0-alpha.27",
+    "@material-ui/x-grid": "^4.0.0-alpha.27",
+    "@material-ui/x-grid-data-generator": "^4.0.0-alpha.27",
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.9",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   }
