@@ -25,6 +25,7 @@
     "@material-ui/data-grid": "^4.0.0-alpha.27",
     "@material-ui/x-grid": "^4.0.0-alpha.27",
     "@material-ui/x-grid-data-generator": "^4.0.0-alpha.27",
+    "@types/node": "^15.0.2",
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.9",
     "react": "^16.6.3",
