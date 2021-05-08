@@ -42,7 +42,6 @@ class SiteScrapper {
 
     enrichRow(map: ISiteScrapperMap[], row: ITableDemoRow, result: AxiosResponse): ITableDemoRow {
         let $ = cheerio.load(result.data);
-        console.log($);
         for (let i = 0; i < map.length; i++) {
             const current = map[i];
             const scrapped = current.matchers.reduce((a, b) => {
@@ -64,7 +63,6 @@ class SiteScrapper {
                 path: "div[data-test-id='issue.views.issue-base.foundation.status.status-field-wrapper']>div>div>div>div>button>span",
                 callback: element => {
                     const text = element.text().trim().toLowerCase();
-                    console.log(text);
                     return text === 'ready to merge';
                 }
             }
@@ -75,7 +73,6 @@ class SiteScrapper {
                 path: "div[data-test-id='issue.views.issue-base.foundation.status.status-field-wrapper']>div>div>div>div>button>span",
                 callback: element => {
                     const text = element.text().trim().toLowerCase();
-                    console.log(text);
                     return text === 'in progress' || text === 'w toku';
                 }
             }
@@ -86,7 +83,6 @@ class SiteScrapper {
                 path: "div[data-test-id='issue.views.issue-base.foundation.status.status-field-wrapper']>div>div>div>div>button>span",
                 callback: element => {
                     const text = element.text().trim().toLowerCase();
-                    console.log(text);
                     return text === 'to correct';
                 }
             }

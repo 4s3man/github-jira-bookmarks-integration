@@ -1,6 +1,10 @@
 {
   "openAll": {
     "message": "Open all",
-    "description": "Text of button with opens all bookmarks in new window"
+    "description": "Text of button which opens all bookmarks in new window"
+  },
+  "updateRows": {
+    "message": "Update rows",
+    "description": "Text of button which updates rows"
   }
 }

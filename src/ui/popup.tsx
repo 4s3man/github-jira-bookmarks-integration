@@ -1,70 +1,37 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
-import axios from "axios";
 import {Button, Card, CardActions, CardContent} from "@material-ui/core";
 
 import "../styles/popup.css"
-import searchTree from "./searchTree";
-import { TableDemo, ITableDemoRow, ITableDemoProps } from "./TableDemo";
-import {scrapper} from "./SiteScrapper";
-import {createRowFromBookmarkNode} from "./tableRowFactory";
-
-import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
-import {createJiraUrl} from "./urlFactory";
+import { TableDemo, ITableDemoRow } from "./TableDemo";
+import {RowRepository} from "./RowRepository";
 
 interface IProps {
 }
 
 interface IState {
-    bookmarkNode?: BookmarkTreeNode,
     rows: Array<ITableDemoRow>
 }
 
 class Hello extends React.Component<IProps, IState> {
+    rowRepository;
     constructor(props) {
         super(props);
         this.state = {
-            bookmarkNode: null,
             rows: []
         };
+        this.rowRepository = new RowRepository((rows) => this.setState({rows}), () => this.state);
     }
 
-    //todo dodać żeby odpalało się w tle co 10 minut i zapisywało te dane do localStorage czy coś
-    //i żeby na otwarcie popupa się updatowało
     componentDidMount() {
-        chrome.bookmarks.getTree(bookmarkTreeNodes => {
-            const githubBookmarkNodes = searchTree(
-                (treeNode: BookmarkTreeNode) => treeNode.title === 'current' && treeNode.children.length,
-                (treeNode: BookmarkTreeNode) => treeNode.children,
-                bookmarkTreeNodes
-            );
-
-            githubBookmarkNodes.children.forEach(
-                (node: BookmarkTreeNode) => axios.get(node.url)
-                    .then((result) => {
-                        let row = scrapper.enrichRowWithGithub(createRowFromBookmarkNode(node), result);
-
-                        axios.get(createJiraUrl(node)).then(result => {
-                           row = scrapper.enrichRowWithJira(row, result);
-                            console.log(row);
-                            this.setState({
-                                bookmarkNode: this.state.bookmarkNode,
-                                rows: [...this.state.rows, ...[row]]
-                            });
-                        });
-                    })
-            );
-
-            this.setState({
-                bookmarkNode: githubBookmarkNodes,
-                rows: this.state.rows
-            });
-        });
+        this.rowRepository.persistState(this.rowRepository.fetchRows());
+        this.rowRepository.removeCurrentlyNotBookmarked();
+        this.rowRepository.updateRows();
     }
 
     openAllBookmarksInNewWindow(): void {
-        let urls = this.state.bookmarkNode.children.map((node: BookmarkTreeNode) => node.url);
-        let firstUrl = urls.pop();
+        let urls = this.state.rows.map((row: ITableDemoRow) => row.url);
+        let firstUrl = urls.shift();
         chrome.windows.create(
             {url: firstUrl},
             (window) => urls.forEach(url => chrome.tabs.create({url, windowId: window.id}))
@@ -82,6 +49,13 @@ class Hello extends React.Component<IProps, IState> {
                     >
                         { chrome.i18n.getMessage("openAll") }
                     </Button>
+                    <Button
+                        onClick={() => this.rowRepository.updateRows()}
+                        variant="contained"
+                        color="primary"
+                    >
+                        { chrome.i18n.getMessage("updateRows") }
+                    </Button>
                 </CardActions>
                 <CardContent style={{ height: 300, width: '100%' }}>
                     <TableDemo rows={this.state.rows}/>
@@ -95,3 +69,7 @@ ReactDOM.render(
     <Hello />,
     document.getElementById('root')
 )
+
+export {
+    IState
+}

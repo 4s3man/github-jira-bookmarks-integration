@@ -24,16 +24,6 @@
       "bookmarks",
       "https://*/*"
     ],
-    "content_security_policy": "unsafe-inline",
-    "content_scripts": [
-      {
-        "matches": [
-          "https://*/*"
-        ],
-        "js": [
-          "js/content.js"
-        ]
-      }
-    ]
+    "content_security_policy": "unsafe-inline"
   }
 

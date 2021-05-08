@@ -1,4 +1,9 @@
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log("Background got a message!")
-    sendResponse({})
-})
+import {RowRepository} from "../ui/RowRepository";
+
+const UPDATE_INTERFAL_10_MIN = 600000;
+
+const rowRepository = new RowRepository(() => null, () => null);
+
+setInterval(function () {
+    rowRepository.updateRows();
+}, UPDATE_INTERFAL_10_MIN);
