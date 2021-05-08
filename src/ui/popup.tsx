@@ -25,7 +25,6 @@ class Hello extends React.Component<IProps, IState> {
 
     componentDidMount() {
         this.rowRepository.persistState(this.rowRepository.fetchRows());
-        this.rowRepository.removeCurrentlyNotBookmarked();
         this.rowRepository.updateRows();
     }
 
@@ -57,8 +56,8 @@ class Hello extends React.Component<IProps, IState> {
                         { chrome.i18n.getMessage("updateRows") }
                     </Button>
                 </CardActions>
-                <CardContent style={{ height: 300, width: '100%' }}>
-                    <TableDemo rows={this.state.rows}/>
+                <CardContent style={{ height: 300, width: '100%', overflowX: "hidden" }}>
+                    <TableDemo rows={this.state.rows} rowRepository={this.rowRepository}/>
                 </CardContent>
             </Card>
         )

@@ -6,5 +6,9 @@
   "updateRows": {
     "message": "Update rows",
     "description": "Text of button which updates rows"
+  },
+  "unwatch": {
+    "message": "Unwatch",
+    "description": "Remove bookmark"
   }
 }

@@ -13,16 +13,19 @@ import {ReactNode} from "react";
 
 import {IScrapped} from "./SiteScrapper";
 import {createJiraUrl} from "./urlFactory";
+import {Button} from "@material-ui/core";
+import {RowRepository} from "./RowRepository";
 
 const useStyles = makeStyles({
     table: {
-        width: "100%",
-        overflow: "scroll"
+        width: "100%"
     },
 });
 
 interface ITableDemoProps {
-    rows: ITableDemoRow[]
+    rows: ITableDemoRow[],
+    rowRepository: RowRepository
+    // unwatch: (event: React.SyntheticEvent, row: ITableDemoRow) => void
 }
 
 interface ITableDemoRow {
@@ -38,6 +41,13 @@ function TableDemo(props: ITableDemoProps) {
         event.preventDefault();
         chrome.tabs.create({url});
     };
+
+    const unwatch = (event: React.SyntheticEvent, row: ITableDemoRow) => {
+        event.preventDefault();
+        chrome.bookmarks.remove(row.id);
+        props.rowRepository.updateRows();
+    }
+
     const createAlerts = (row: ITableDemoRow): ReactNode => {
         return Object.entries(row.scrapped).map((entry, i) => {
             const key = `${row.id}_${entry[0]}_${i}`;
@@ -77,6 +87,7 @@ function TableDemo(props: ITableDemoProps) {
                 <caption>A basic table example with a caption</caption>
                 <TableHead>
                     <TableRow>
+                        <TableCell>Actions</TableCell>
                         <TableCell>Alerts</TableCell>
                         <TableCell>Title</TableCell>
                         <TableCell>jiraUrl</TableCell>
@@ -85,6 +96,15 @@ function TableDemo(props: ITableDemoProps) {
                 <TableBody>
                     {props.rows.map((row, i) => (
                         <TableRow key={`${row.id}_${i}`}>
+                            <TableCell>
+                                <Button
+                                    onClick={(event) => unwatch(event, row)}
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    { chrome.i18n.getMessage("unwatch") }
+                                </Button>
+                            </TableCell>
                             <TableCell>
                                 {createAlerts(row)}
                             </TableCell>

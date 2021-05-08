@@ -30,6 +30,7 @@ export class RowRepository {
     }
 
     updateRows() {
+        this.removeCurrentlyNotBookmarked();
         chrome.bookmarks.getTree(bookmarkTreeNodes => {
             const githubBookmarkNodes = searchTree(
                 (treeNode: BookmarkTreeNode) => treeNode.title === 'current' && treeNode.children.length,
