@@ -10,5 +10,26 @@
   "unwatch": {
     "message": "Unwatch",
     "description": "Remove bookmark"
+  },
+  "actions": {
+    "message": "Actions",
+    "description": "Table header actions"
+  },
+  "alerts": {
+    "message": "Alerts",
+    "description": "Table header alerts"
+  },
+  "title": {
+    "message": "Title",
+    "description": "Table header title"
+  },
+  "jiraLink": {
+    "message": "Jira",
+    "description": "Table header JiraLink"
+  },
+  "copyCrRequestLink": {
+    "message": "Copy cr request links",
+    "description": "Table header JiraLink"
   }
+
 }

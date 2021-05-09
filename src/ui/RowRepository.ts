@@ -69,7 +69,7 @@ export class RowRepository {
     }
 
     persistState(rows: ITableDemoRow[]): void {
-        console.log('prepersist', rows);
+        rows.sort((a, b) => a.id > b.id ? 1 : -1);
         this.additionalPersist(rows);
         saveRows(rows);
     }

@@ -25,7 +25,6 @@ const useStyles = makeStyles({
 interface ITableDemoProps {
     rows: ITableDemoRow[],
     rowRepository: RowRepository
-    // unwatch: (event: React.SyntheticEvent, row: ITableDemoRow) => void
 }
 
 interface ITableDemoRow {
@@ -82,15 +81,14 @@ function TableDemo(props: ITableDemoProps) {
     }
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} style={{width:"100%", overflowX: "hidden"}}>
             <Table className={classes.table} aria-label="caption table">
-                <caption>A basic table example with a caption</caption>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Actions</TableCell>
-                        <TableCell>Alerts</TableCell>
-                        <TableCell>Title</TableCell>
-                        <TableCell>jiraUrl</TableCell>
+                        <TableCell>{ chrome.i18n.getMessage("actions") }</TableCell>
+                        <TableCell>{ chrome.i18n.getMessage("alerts") }</TableCell>
+                        <TableCell>{ chrome.i18n.getMessage("title") }</TableCell>
+                        <TableCell>{ chrome.i18n.getMessage("jiraLink") }</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -118,7 +116,7 @@ function TableDemo(props: ITableDemoProps) {
                             <TableCell>
                                 <Alert severity={"info"}>
                                     <Link href={row.url} onClick={(event) => openLink(event, createJiraUrl(row))}>
-                                        jira link
+                                        { chrome.i18n.getMessage("jiraLink") }
                                     </Link>
                                 </Alert>
                             </TableCell>

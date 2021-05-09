@@ -5,6 +5,7 @@ import {Button, Card, CardActions, CardContent} from "@material-ui/core";
 import "../styles/popup.css"
 import { TableDemo, ITableDemoRow } from "./TableDemo";
 import {RowRepository} from "./RowRepository";
+import {isForCodeReview} from "./scrappedInterpreter";
 
 interface IProps {
 }
@@ -37,6 +38,10 @@ class Hello extends React.Component<IProps, IState> {
         );
     }
 
+    copyCrRequestLinks() {
+        navigator.clipboard.writeText(this.state.rows.filter(row => isForCodeReview(row.scrapped)).map(row => row.url).join("\n"));
+    }
+
     render() {
         return (
             <Card style={{overflowY: "scroll", overflowX: "hidden"}}>
@@ -55,9 +60,19 @@ class Hello extends React.Component<IProps, IState> {
                     >
                         { chrome.i18n.getMessage("updateRows") }
                     </Button>
+                    <Button
+                        onClick={() => this.copyCrRequestLinks()}
+                        variant="contained"
+                        color="primary"
+                    >
+                        { chrome.i18n.getMessage("copyCrRequestLink") }
+                    </Button>
                 </CardActions>
-                <CardContent style={{ height: 300, width: '100%', overflowX: "hidden" }}>
-                    <TableDemo rows={this.state.rows} rowRepository={this.rowRepository}/>
+                <CardContent style={{   width: "100%"}}>
+                    <TableDemo
+                        rows={this.state.rows}
+                        rowRepository={this.rowRepository}
+                    />
                 </CardContent>
             </Card>
         )
