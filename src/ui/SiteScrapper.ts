@@ -24,6 +24,9 @@ interface IScrapped {
 }
 
 class SiteScrapper {
+    isBuildErrorPath = 'div[title="This commit cannot be built"]';
+
+
     creteMapEntry(name: string, ...matchers: IMatcher[]): ISiteScrapperMap
     {
         return {
@@ -93,7 +96,6 @@ class SiteScrapper {
                 path: "div[data-test-id='issue.views.issue-base.foundation.status.status-field-wrapper']>div>div>div>div>button>span",
                 callback: element => {
                     const text = element.text().trim().toLowerCase();
-                    console.log(text);
                     return text === 'in review';
                 }
             }
@@ -124,10 +126,9 @@ class SiteScrapper {
         this.creteMapEntry(
             'isBuildError',
             {
-                path: '#partial-pull-merging > div.merge-pr.js-merge-pr.js-details-container.Details.is-squashing > div > div > div > div > div:nth-child(2) > div:nth-child(2) > h3',
+                path: this.isBuildErrorPath,
                 callback: element => {
-                    const text = element.text().trim();
-                    return text !== 'All checks have passed';
+                    return element.text().trim().indexOf('This commit cannot be built') !== -1;
                 }
             }
         ),
