@@ -1,5 +1,3 @@
-import {log} from "util";
-
 const cheerio = require('cheerio');
 import {AxiosResponse} from "axios";
 import {ITableDemoRow} from "./TableDemo";

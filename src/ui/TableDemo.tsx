@@ -86,7 +86,7 @@ function TableDemo(props: ITableDemoProps) {
     const filteredRows = () => {
         return props.rows.filter((row: ITableDemoRow) => {
             for (const [key, value] of Object.entries(row.scrapped)) {
-                if (key === props.searchTerm && !!value) {
+                if (!!value && key.includes(props.searchTerm)) {
                     return true;
                 }
             }
@@ -116,13 +116,6 @@ function TableDemo(props: ITableDemoProps) {
                                     justifyContent="space-between"
                                 >
                                     <Button
-                                        onClick={(event) => unwatch(event, row)}
-                                        variant="contained"
-                                        color="primary"
-                                    >
-                                        { chrome.i18n.getMessage("unwatch") }
-                                    </Button>
-                                    <Button
                                             variant="contained"
                                             color="primary"
                                             onClick={(event) => openLink(event, createJiraUrl(row))}
@@ -134,12 +127,20 @@ function TableDemo(props: ITableDemoProps) {
                             <TableCell>
                                 {createAlerts(row)}
                             </TableCell>
-                            <TableCell component="th" scope="row">
+                            <TableCell>
                                 <Alert severity={getMainSeverity(row.scrapped)}>
                                     <Link href={row.url} onClick={(event) => openLink(event, row.url)}>
                                         {row.title}
                                     </Link>
                                 </Alert>
+                            </TableCell>
+                            <TableCell>
+                                <div
+                                    style={{backgroundColor:"lightyellow", cursor:"pointer", padding:"1em"}}
+                                    onClick={(event) => unwatch(event, row)}
+                                >
+                                    { chrome.i18n.getMessage("unwatch") }
+                                </div>
                             </TableCell>
                         </TableRow>
                     ))}

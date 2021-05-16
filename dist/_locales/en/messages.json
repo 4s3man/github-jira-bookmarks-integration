@@ -30,6 +30,9 @@
   "copyCrRequestLink": {
     "message": "Copy cr request links",
     "description": "Table header JiraLink"
+  },
+  "github": {
+    "message": "Github",
+    "description": "Github link button"
   }
-
 }
