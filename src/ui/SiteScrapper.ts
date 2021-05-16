@@ -1,3 +1,5 @@
+import {log} from "util";
+
 const cheerio = require('cheerio');
 import {AxiosResponse} from "axios";
 import {ITableDemoRow} from "./TableDemo";
@@ -25,7 +27,6 @@ interface IScrapped {
 
 class SiteScrapper {
     isBuildErrorPath = 'div[title="This commit cannot be built"]';
-
 
     creteMapEntry(name: string, ...matchers: IMatcher[]): ISiteScrapperMap
     {
@@ -109,7 +110,7 @@ class SiteScrapper {
                 path: '#partial-pull-merging > div.merge-pr.js-merge-pr.js-details-container.Details.is-squashing > div > div > div > div > div:nth-child(1) > h3',
                 callback: element => {
                     const text = element.text().trim();
-                    return text === 'Changes requested';
+                    return text === 'Code owner review required';
                 }
             }
         ),

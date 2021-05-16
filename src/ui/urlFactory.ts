@@ -6,6 +6,11 @@ function createJiraUrl(node: BookmarkTreeNode|ITableDemoRow): string {
     return `https://pragmagotech.atlassian.net/browse/${jiraNumber}`;
 }
 
+function createGithubShowPartialState(node: BookmarkTreeNode) {
+    return `${node.url}/show_partial?partial=pull_requests%2Fmerging`;
+}
+
 export {
-    createJiraUrl
+    createJiraUrl,
+    createGithubShowPartialState
 }

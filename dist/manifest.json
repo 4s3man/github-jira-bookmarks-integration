@@ -9,20 +9,6 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     },
-    "commands": {
-      "save" : {
-        "suggested_key": {
-          "default": "Alt+Shift+S"
-        },
-        "description": "Save a link"
-      },
-      "random": {
-        "suggested_key": {
-          "default": "Alt+Shift+L"
-        },
-        "description": "Load a random link"
-      }
-    },
     "browser_action": {
       "default_title": "TSRWPCX",
       "default_popup": "popup.html"

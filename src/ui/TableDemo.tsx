@@ -10,11 +10,13 @@ import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import Alert, { Color } from '@material-ui/lab/Alert';
 import {ReactNode} from "react";
+import Box from '@material-ui/core/Box';
 
 import {IScrapped} from "./SiteScrapper";
 import {createJiraUrl} from "./urlFactory";
 import {Button} from "@material-ui/core";
 import {RowRepository} from "./RowRepository";
+import {prop} from "cheerio/lib/api/attributes";
 
 const useStyles = makeStyles({
     table: {
@@ -24,7 +26,8 @@ const useStyles = makeStyles({
 
 interface ITableDemoProps {
     rows: ITableDemoRow[],
-    rowRepository: RowRepository
+    rowRepository: RowRepository,
+    searchTerm: string
 }
 
 interface ITableDemoRow {
@@ -80,6 +83,18 @@ function TableDemo(props: ITableDemoProps) {
         return "warning";
     }
 
+    const filteredRows = () => {
+        return props.rows.filter((row: ITableDemoRow) => {
+            for (const [key, value] of Object.entries(row.scrapped)) {
+                if (key === props.searchTerm && !!value) {
+                    return true;
+                }
+            }
+
+            return row.title.toLowerCase().includes(props.searchTerm);
+        })
+    }
+
     return (
         <TableContainer component={Paper} style={{width:"100%", overflowX: "hidden"}}>
             <Table className={classes.table} aria-label="caption table">
@@ -88,20 +103,33 @@ function TableDemo(props: ITableDemoProps) {
                         <TableCell>{ chrome.i18n.getMessage("actions") }</TableCell>
                         <TableCell>{ chrome.i18n.getMessage("alerts") }</TableCell>
                         <TableCell>{ chrome.i18n.getMessage("title") }</TableCell>
-                        <TableCell>{ chrome.i18n.getMessage("jiraLink") }</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {props.rows.map((row, i) => (
+                    {filteredRows().map((row, i) => (
                         <TableRow key={`${row.id}_${i}`}>
-                            <TableCell>
-                                <Button
-                                    onClick={(event) => unwatch(event, row)}
-                                    variant="contained"
-                                    color="primary"
+                            <TableCell >
+                                <Box
+                                    display="flex"
+                                    flexWrap="wrap"
+                                    alignContent="flex-center"
+                                    justifyContent="space-between"
                                 >
-                                    { chrome.i18n.getMessage("unwatch") }
-                                </Button>
+                                    <Button
+                                        onClick={(event) => unwatch(event, row)}
+                                        variant="contained"
+                                        color="primary"
+                                    >
+                                        { chrome.i18n.getMessage("unwatch") }
+                                    </Button>
+                                    <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={(event) => openLink(event, createJiraUrl(row))}
+                                    >
+                                        { chrome.i18n.getMessage("jiraLink") }
+                                    </Button>
+                                </Box>
                             </TableCell>
                             <TableCell>
                                 {createAlerts(row)}
@@ -110,13 +138,6 @@ function TableDemo(props: ITableDemoProps) {
                                 <Alert severity={getMainSeverity(row.scrapped)}>
                                     <Link href={row.url} onClick={(event) => openLink(event, row.url)}>
                                         {row.title}
-                                    </Link>
-                                </Alert>
-                            </TableCell>
-                            <TableCell>
-                                <Alert severity={"info"}>
-                                    <Link href={row.url} onClick={(event) => openLink(event, createJiraUrl(row))}>
-                                        { chrome.i18n.getMessage("jiraLink") }
                                     </Link>
                                 </Alert>
                             </TableCell>
