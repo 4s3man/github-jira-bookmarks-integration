@@ -17,6 +17,8 @@ import {createJiraUrl} from "./urlFactory";
 import {Button} from "@material-ui/core";
 import {RowRepository} from "./RowRepository";
 import {prop} from "cheerio/lib/api/attributes";
+import Tab = chrome.tabs.Tab;
+import {log} from "util";
 
 const useStyles = makeStyles({
     table: {
@@ -41,7 +43,11 @@ function TableDemo(props: ITableDemoProps) {
     const classes = useStyles();
     const openLink = (event: React.SyntheticEvent, url: string) => {
         event.preventDefault();
-        chrome.tabs.create({url});
+        chrome.tabs.query({}, (tabs: Tab[]) => {
+            const tab = tabs.find((tab: Tab) => tab.url === url);
+            tab ? chrome.tabs.update(tab.id, {active: true})
+                : chrome.tabs.create({url})
+        });
     };
 
     const unwatch = (event: React.SyntheticEvent, row: ITableDemoRow) => {
