@@ -97,7 +97,7 @@ function TableDemo(props: ITableDemoProps) {
                 }
             }
 
-            return row.title.toLowerCase().includes(props.searchTerm);
+            return row.title.toLowerCase().includes(props.searchTerm.toLowerCase());
         })
     }
 
