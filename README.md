@@ -1,4 +1,14 @@
-# TypeScript / React / Webpack / Chrome Extension Boilerplate
+#Installation
+- Download
+- Open GoogleChrome and go to [chrome://extensions/](chrome://extensions/)
+- Set developer mode on, in to right corner
+- Click "Load unpacked"
+- Choose dist folder, from downloaded extension
+
+
+
+## Core doc below
+### TypeScript / React / Webpack / Chrome Extension Boilerplate
 
 You can use this boilerplate code to start developing a Chrome extension using [TypeScript](https://www.typescriptlang.org/)/JS, [React](https://reactjs.org/) for the frontend, and [Webpack](https://webpack.js.org/) as the build system.
 
