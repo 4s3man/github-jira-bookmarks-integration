@@ -7,6 +7,7 @@ import "../styles/popup.css"
 import { TableDemo, ITableDemoRow } from "./TableDemo";
 import {RowRepository} from "./RowRepository";
 import {isForCodeReview} from "./scrappedInterpreter";
+import {clearSpecification} from "./ClearSpecification";
 
 interface IProps {
 }
@@ -61,9 +62,17 @@ class Hello extends React.Component<IProps, IState> {
         });
     }
 
+    clear() {
+        this.state.rows.map((row: ITableDemoRow) => row.url);
+        this.state.rows.forEach(
+            (row: ITableDemoRow) => clearSpecification.shouldClear(row) && chrome.bookmarks.remove(row.id)
+        );
+        this.rowRepository.updateRows();
+    }
+
     render() {
         return (
-            <Card style={{overflowY: "scroll", overflowX: "hidden"}}>
+            <Card style={{overflowY: "scroll", overflowX: "scroll"}}>
                 <CardActions
                     style={{display:"flex", flexFlow:"column"}}
                 >
@@ -89,6 +98,13 @@ class Hello extends React.Component<IProps, IState> {
                         >
                             { chrome.i18n.getMessage("copyCrRequestLink") }
                         </Button>
+                        <Button
+                            onClick={() => this.clear()}
+                            variant="contained"
+                            color="secondary"
+                        >
+                            { chrome.i18n.getMessage("clear") }
+                        </Button>
                     </div>
                     <div>
                         <input
@@ -98,7 +114,7 @@ class Hello extends React.Component<IProps, IState> {
                         />
                     </div>
                 </CardActions>
-                <CardContent style={{   width: "100%"}}>
+                <CardContent style={{ width: "100%"}}>
                     <TableDemo
                         rows={this.state.rows}
                         rowRepository={this.rowRepository}

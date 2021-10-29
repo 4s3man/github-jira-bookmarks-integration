@@ -20,7 +20,9 @@ interface IScrapped {
     isToCorrect: boolean,
     isReadyToMerge: boolean,
     isInProgress: boolean,
-    isInReview: boolean
+    isInReview: boolean,
+    isMerged: boolean,
+    isClosed: boolean
 }
 
 class SiteScrapper {
@@ -34,8 +36,12 @@ class SiteScrapper {
         }
     }
 
-    enrichRowWithGithub(row: ITableDemoRow, result: AxiosResponse): ITableDemoRow {
-        return this.enrichRow(this.githubMap, row, result);
+    enrichRowWithGithubConversation(row: ITableDemoRow, result: AxiosResponse): ITableDemoRow {
+        return this.enrichRow(this.githubConversationMap, row, result);
+    }
+
+    enrichRowWithGithubPartial(row: ITableDemoRow, result: AxiosResponse): ITableDemoRow {
+        return this.enrichRow(this.githubPartialMap, row, result);
     }
 
     enrichRowWithJira(row: ITableDemoRow, result: AxiosResponse): ITableDemoRow {
@@ -101,14 +107,37 @@ class SiteScrapper {
         )
     ];
 
-    githubMap: ISiteScrapperMap[] = [
+    githubConversationMap: ISiteScrapperMap[] = [
+        this.creteMapEntry(
+            'isMerged',
+            {
+                path: '#partial-discussion-header > div.d-flex.flex-items-center.flex-wrap.mt-0.gh-header-meta > div.flex-shrink-0.mb-2.flex-self-start.flex-md-self-center > span',
+                callback: element => {
+                    const text = element.text().trim();
+                    return text === 'Merged';
+                }
+            }
+        ),
+        this.creteMapEntry(
+            'isClosed',
+            {
+                path: '#partial-discussion-header > div.d-flex.flex-items-center.flex-wrap.mt-0.gh-header-meta > div.flex-shrink-0.mb-2.flex-self-start.flex-md-self-center > span',
+                callback: element => {
+                    const text = element.text().trim();
+                    return text === 'Closed';
+                }
+            }
+        ),
+    ];
+
+    githubPartialMap: ISiteScrapperMap[] = [
         this.creteMapEntry(
             'isRequestedChanges',
             {
                 path: '#partial-pull-merging > div.merge-pr.js-merge-pr.js-details-container.Details.is-squashing > div > div > div > div > div:nth-child(1) > h3',
                 callback: element => {
                     const text = element.text().trim();
-                    return text === 'Code owner review required';
+                    return text === 'Changes requested';
                 }
             }
         ),

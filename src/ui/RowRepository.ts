@@ -4,7 +4,7 @@ import searchTree from "./searchTree";
 import BookmarkTreeNode = chrome.bookmarks.BookmarkTreeNode;
 import axios from "axios";
 import {scrapper} from "./SiteScrapper";
-import {createGithubShowPartialState, createJiraUrl} from "./urlFactory";
+import {urlFactory} from "./urlFactory";
 import {createRowFromBookmarkNode} from "./tableRowFactory";
 import {saveRows, fetchRows} from "./localStorageRepository";
 
@@ -39,16 +39,25 @@ export class RowRepository {
             ).children;
 
             githubBookmarkNodes.forEach(bookmarkNode => {
-                axios.get(createGithubShowPartialState(bookmarkNode))
+                axios.get(urlFactory.createGithubConversationUrl(bookmarkNode))
                     .then(result => {
                             this.persistState([
                                 ...this.fetchRowsWithoutCurrent(bookmarkNode),
-                                scrapper.enrichRowWithGithub(this.provideRow(bookmarkNode), result),
+                                scrapper.enrichRowWithGithubConversation(this.provideRow(bookmarkNode), result),
                             ])
                         }
                     );
 
-                axios.get(createJiraUrl(bookmarkNode))
+                axios.get(urlFactory.createGithubShowPartialState(bookmarkNode))
+                    .then(result => {
+                            this.persistState([
+                                ...this.fetchRowsWithoutCurrent(bookmarkNode),
+                                scrapper.enrichRowWithGithubPartial(this.provideRow(bookmarkNode), result),
+                            ])
+                        }
+                    );
+
+                axios.get(urlFactory.createJiraUrl(bookmarkNode))
                     .then(result => {
                             this.persistState([
                                 ...this.fetchRowsWithoutCurrent(bookmarkNode),

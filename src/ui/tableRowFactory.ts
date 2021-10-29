@@ -11,7 +11,9 @@ function createDefaultScrapped(): IScrapped {
         isInProgress: false,
         isToCorrect: false,
         isReadyToMerge: false,
-        isInReview: false
+        isInReview: false,
+        isMerged: false,
+        isClosed: false
     }
 }
 

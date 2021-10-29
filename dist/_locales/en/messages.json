@@ -34,5 +34,9 @@
   "github": {
     "message": "Github",
     "description": "Github link button"
+  },
+  "clear": {
+    "message": "Clear",
+    "description": "Clear bookmarks button"
   }
 }

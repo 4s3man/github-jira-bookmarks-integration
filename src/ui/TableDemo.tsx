@@ -13,7 +13,7 @@ import {ReactNode} from "react";
 import Box from '@material-ui/core/Box';
 
 import {IScrapped} from "./SiteScrapper";
-import {createJiraUrl} from "./urlFactory";
+import {urlFactory} from "./urlFactory";
 import {Button} from "@material-ui/core";
 import {RowRepository} from "./RowRepository";
 import {prop} from "cheerio/lib/api/attributes";
@@ -70,8 +70,16 @@ function TableDemo(props: ITableDemoProps) {
                 isChangesApproved: "success"
             };
 
+            const styleMap = {
+                isMerged: {backgroundColor: '#8957E5', color: 'white'},
+            }
+
             return (
-                <Alert key={key} severity={severityMap[entry[0]] || 'info'}>
+                <Alert
+                    key={key}
+                    severity={severityMap[entry[0]] || 'info'}
+                    style={styleMap[entry[0]]}
+                >
                     {entry[0]}
                 </Alert>
             );
@@ -106,12 +114,14 @@ function TableDemo(props: ITableDemoProps) {
             <Table className={classes.table} aria-label="caption table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>{ chrome.i18n.getMessage("actions") }</TableCell>
-                        <TableCell>{ chrome.i18n.getMessage("alerts") }</TableCell>
-                        <TableCell>{ chrome.i18n.getMessage("title") }</TableCell>
+                        {/*<TableCell>{ chrome.i18n.getMessage("actions") }</TableCell>*/}
+                        {/*<TableCell>{ chrome.i18n.getMessage("alerts") }</TableCell>*/}
+                        {/*<TableCell>{ chrome.i18n.getMessage("title") }</TableCell>*/}
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody
+                    style={{display: 'flex', flexFlow: 'column nowrap'}}
+                >
                     {filteredRows().map((row, i) => (
                         <TableRow key={`${row.id}_${i}`}>
                             <TableCell >
@@ -124,7 +134,7 @@ function TableDemo(props: ITableDemoProps) {
                                     <Button
                                             variant="contained"
                                             color="primary"
-                                            onClick={(event) => openLink(event, createJiraUrl(row))}
+                                            onClick={(event) => openLink(event, urlFactory.createJiraUrl(row))}
                                     >
                                         { chrome.i18n.getMessage("jiraLink") }
                                     </Button>
