@@ -9,7 +9,8 @@ interface ISiteScrapperMap {
 
 interface IMatcher {
     path: string,
-    callback: (element) => boolean
+    callback: (element) => boolean,
+    responseType?: 'html'|'json'
 }
 
 interface IScrapped {
@@ -22,7 +23,18 @@ interface IScrapped {
     isInProgress: boolean,
     isInReview: boolean,
     isMerged: boolean,
-    isClosed: boolean
+    isClosed: boolean,
+    isDone: boolean
+}
+
+interface JiraApiIssueResponse {
+    data: {
+        fields: {
+            status: {
+                name: 'Accepted' | 'Blocked' | 'Ready to merge' | 'In Review' | 'Is to Correct' | 'In Progress' | 'Done'
+            };
+        }
+    }
 }
 
 class SiteScrapper {
@@ -30,9 +42,19 @@ class SiteScrapper {
 
     creteMapEntry(name: string, ...matchers: IMatcher[]): ISiteScrapperMap
     {
+        const matchersWithDefaults = matchers.map(
+            (m) => {
+                if (m.responseType === undefined) {
+                    m.responseType = 'html';
+                }
+
+                return m;
+            }
+        );
+
         return {
             name: name,
-            matchers: [...matchers]
+            matchers: [...matchersWithDefaults]
         }
     }
 
@@ -53,7 +75,9 @@ class SiteScrapper {
         for (let i = 0; i < map.length; i++) {
             const current = map[i];
             const scrapped = current.matchers.reduce((a, b) => {
-                a[current.name] = b.callback($(b.path));
+                a[current.name] = b.responseType === "html"
+                    ? b.callback($(b.path))
+                    : b.callback(result);
 
                 return a;
             }, {});
@@ -68,41 +92,70 @@ class SiteScrapper {
         this.creteMapEntry(
             'isReadyToMerge',
             {
-                path: "div[data-test-id='issue.views.issue-base.foundation.status.status-field-wrapper']>div>div>div>div>button>span",
-                callback: element => {
-                    const text = element.text().trim().toLowerCase();
-                    return text === 'ready to merge';
-                }
+                path: '',
+                callback: (element: JiraApiIssueResponse) => {
+                    return  element.data.fields.status.name === 'Ready to merge'
+                },
+                responseType: 'json'
             }
         ),
         this.creteMapEntry(
             'isInProgress',
             {
-                path: "div[data-test-id='issue.views.issue-base.foundation.status.status-field-wrapper']>div>div>div>div>button>span",
-                callback: element => {
-                    const text = element.text().trim().toLowerCase();
-                    return text === 'in progress' || text === 'w toku';
-                }
+                path: '',
+                callback: (element: JiraApiIssueResponse) => {
+                    return  element.data.fields.status.name === 'In Progress'
+                },
+                responseType: 'json'
             }
         ),
         this.creteMapEntry(
             'isToCorrect',
             {
-                path: "div[data-test-id='issue.views.issue-base.foundation.status.status-field-wrapper']>div>div>div>div>button>span",
-                callback: element => {
-                    const text = element.text().trim().toLowerCase();
-                    return text === 'to correct';
-                }
-            }
+                path: '',
+                callback: (element: JiraApiIssueResponse) => {
+                    return  element.data.fields.status.name === 'Is to Correct'
+                },
+                responseType: 'json'            }
         ),
         this.creteMapEntry(
             'isInReview',
             {
-                path: "div[data-test-id='issue.views.issue-base.foundation.status.status-field-wrapper']>div>div>div>div>button>span",
-                callback: element => {
-                    const text = element.text().trim().toLowerCase();
-                    return text === 'in review';
-                }
+                path: '',
+                callback: (element: JiraApiIssueResponse) => {
+                    return  element.data.fields.status.name === 'In Review'
+                },
+                responseType: 'json'
+            }
+        ),
+        this.creteMapEntry(
+            'isDone',
+            {
+                path: '',
+                callback: (element: JiraApiIssueResponse) => {
+                    return  element.data.fields.status.name === 'Done'
+                },
+                responseType: 'json'
+            }
+        ),
+        this.creteMapEntry(
+            'isAccepted',
+            {
+                path: '',
+                callback: (element: JiraApiIssueResponse) => {
+                    return  element.data.fields.status.name === 'Accepted'
+                },
+                responseType: 'json'
+            }
+        ),
+        this.creteMapEntry(
+            'isBlocked',
+            {
+                path: '',
+                callback: (element: JiraApiIssueResponse) => {
+                    return  element.data.fields.status.name === 'Blocked'
+                },
+                responseType: 'json'
             }
         )
     ];
