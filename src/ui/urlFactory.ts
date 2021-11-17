@@ -13,7 +13,7 @@ class UrlFactory {
 
     createJiraTaskUrl(node: BookmarkTreeNode|ITableDemoRow): string {
         const jiraNumber = node.title.split(' ').reverse().pop();
-        return `https://pragmagotech.atlassian.net/rest/api/latest/issue//${jiraNumber}`;
+        return `https://pragmagotech.atlassian.net/browse/${jiraNumber}`;
     }
 
     createGithubShowPartialState(node: BookmarkTreeNode) {
