@@ -13,7 +13,8 @@ function createDefaultScrapped(): IScrapped {
         isReadyToMerge: false,
         isInReview: false,
         isMerged: false,
-        isClosed: false
+        isClosed: false,
+        isDone: false
     }
 }
 

@@ -57,7 +57,7 @@ export class RowRepository {
                         }
                     );
 
-                axios.get(urlFactory.createJiraUrl(bookmarkNode))
+                axios.get(urlFactory.createApiJiraUrl(bookmarkNode))
                     .then(result => {
                             this.persistState([
                                 ...this.fetchRowsWithoutCurrent(bookmarkNode),

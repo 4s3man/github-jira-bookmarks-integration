@@ -134,7 +134,7 @@ function TableDemo(props: ITableDemoProps) {
                                     <Button
                                             variant="contained"
                                             color="primary"
-                                            onClick={(event) => openLink(event, urlFactory.createJiraUrl(row))}
+                                            onClick={(event) => openLink(event, urlFactory.createJiraTaskUrl(row))}
                                     >
                                         { chrome.i18n.getMessage("jiraLink") }
                                     </Button>

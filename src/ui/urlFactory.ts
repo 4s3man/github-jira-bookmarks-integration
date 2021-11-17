@@ -6,7 +6,12 @@ class UrlFactory {
         return `${node.url}`;
     }
 
-    createJiraUrl(node: BookmarkTreeNode|ITableDemoRow): string {
+    createApiJiraUrl(node: BookmarkTreeNode|ITableDemoRow): string {
+        const jiraNumber = node.title.split(' ').reverse().pop();
+        return `https://pragmagotech.atlassian.net/rest/api/latest/issue//${jiraNumber}`;
+    }
+
+    createJiraTaskUrl(node: BookmarkTreeNode|ITableDemoRow): string {
         const jiraNumber = node.title.split(' ').reverse().pop();
         return `https://pragmagotech.atlassian.net/rest/api/latest/issue//${jiraNumber}`;
     }
